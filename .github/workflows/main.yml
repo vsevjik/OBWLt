@@ -1,0 +1,50 @@
+name: Parser Auto-Update
+
+# Настройки запуска
+on:
+  schedule:
+    - cron: '0 * * * *' # Запускать каждый час в 00 минут
+  workflow_dispatch:    # Позволяет запускать скрипт вручную по кнопке
+
+jobs:
+  update-configs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Права на запись в репозиторий
+
+    steps:
+      # 1. Скачиваем текущий код репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Устанавливаем Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Устанавливаем зависимости из requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Запускаем ваш парсер
+      # Внимание: парсер сам скачает Xray-core при первом запуске
+      - name: Run Parser
+        run: python parser.py
+
+      # 5. Сохраняем результаты обратно в репозиторий
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Добавляем все текстовые файлы, логи и json-кеш, которые создал скрипт
+          git add *.txt *.json *.log || true
+          
+          # Делаем коммит (если нет изменений, игнорируем ошибку)
+          git commit -m "Обновление базы конфигов: $(date +'%Y-%m-%d %H:%M')" || echo "Нет изменений для коммита"
+          
+          # Отправляем изменения в репозиторий
+          git push
