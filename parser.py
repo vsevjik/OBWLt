@@ -683,30 +683,14 @@ def rename_configs():
         
         if '#' in url:
             fragment = url.split('#', 1)[1]
-            flag_match = re        
-        protocol = detect_protocol(url)
-        flag = "🌐"
-        country = "Global"
-        
-        if '#' in url:
-            fragment = url.split('#', 1)[1]
-            flag_match.search(r'[\U0001F1E6-\U0001F1FF]{2}', fragment)
-            if flag_match:
-                flag = flag_match.group(0)
-                country = get_country_name(flag)
-        
-        new_name = f"№{ = re.search(r'[\U0001F1E6-\U0001F1FF]{2}', fragment)
+            flag_match = re.search(r'[\U0001F1E6-\U0001F1FF]{2}', fragment)
             if flag_match:
                 flag = flag_match.group(0)
                 country = get_country_name(flag)
         
         new_name = f"№{i} | {flag} {country} | {service} | {TG_CHANNEL}"
         base = url.split("#", 1)[0]
-i} | {flag} {country} | {service} | {TG_CHANNEL}"
-        base = url.split("#", 1)[0]
         renamed.append(f"{base}#{new_name}")
-    
-    with open(NAMED_FILE        renamed.append(f"{base}#{new_name}")
     
     with open(NAMED_FILE, 'w', encoding='utf-8') as f:
         for url in renamed:
@@ -715,40 +699,17 @@ i} | {flag} {country} | {service} | {TG_CHANNEL}"
     log(f"✅ Переименовано: {len(renamed)} конфигов")
     return True
 
-, 'w', encoding='utf-8') as f:
-        for url in renamed:
-            f.write(url + '\n')
-    
-    log(f"✅ Переименовано: {len(renamed)} конфигов")
-    return True
-
-def maindef main():
+def main():
     log("="*60)
     log("🚀 ЗАПУСК ПОЛНОЦЕННОГО ПАРСЕРА")
     log("="*60)
     
     # Шаг 1: Скачивание
     if not download_sources():
-    log("="*60)
-    log("🚀 ЗАПУСК ПОЛНОЦЕННОГО ПАРСЕРА")
-    log("="*60)
-    
-    # Шаг 1: Скачивание
-    if not download_sources():
-        log("⏭️ Нет данных")
-        return
-    
-    # Шаг 2: Очистка():
         log("⏭️ Нет данных")
         return
     
     # Шаг 2: Очистка
-   
-    if not clean_vless():
-        log("⏭️ Нет после очистки")
-        return
-    
-    # Шаг 3: Фильтрация
     if not clean_vless():
         log("⏭️ Нет после очистки")
         return
@@ -760,18 +721,7 @@ def maindef main():
     
     # Шаг 4: Переименование
     if not rename_configs():
-        log(" if not filter_vless():
-        log("⏭️ Нет после фильтрации")
-        return
-    
-    # Шаг 4: Переименование
-    if not rename_configs():
-        log⏭️ Ошибка переименования")
-        return
-    
-    # Шаг 5: ПОЛНОЦЕННАЯ ПРОВЕРКА
-    log("="*60)
-    log("🔍 ПОЛНОЦЕННА("⏭️ Ошибка переименования")
+        log("⏭️ Ошибка переименования")
         return
     
     # Шаг 5: ПОЛНОЦЕННАЯ ПРОВЕРКА
@@ -781,22 +731,12 @@ def maindef main():
     
     with open(NAMED_FILE, 'r', encoding='utf-8') as f:
         urls = [line.strip() for line in f if line.strip()]
-Я ПРОВЕРКА РАБОТОСПОСОБНОСТИ")
-    log("="*60)
     
-    with open(NAMED_FILE, 'r', encoding='utf-8') as f:
-        urls = [line.strip() for line in f if line.strip()]
+    if not urls:
+        log("❌ Нет конфигов для проверки")
+        return
     
-       
     checker = ConfigChecker()
-    working = checker.check_all(urls)
-    checker.save_cache()
-    
-    working.sort(key=lambda x: x.get('ping', 999))
-    
-    with open(WORK_FILE, 'w', encoding='utf-8') as f:
-        for w in working:
-            f.write(w['url'] + '\ checker = ConfigChecker()
     working = checker.check_all(urls)
     checker.save_cache()
     
@@ -809,17 +749,7 @@ def maindef main():
     log("="*60)
     log("📊 СТАТИСТИКА")
     log("="*60)
-n')
-    
-    log("="*60)
-    log("📊 СТАТИСТИКА")
-    log("="*60)
     log(f"📥 Всего конфигов: {len(urls)}")
-    log(f"✅ Рабочих: {len(working)}")
-    
-    methods = {}
-    for w in working:
-        method = w.get('method    log(f"📥 Всего конфигов: {len(urls)}")
     log(f"✅ Рабочих: {len(working)}")
     
     methods = {}
@@ -829,16 +759,7 @@ n')
     
     log("📈 Методы проверки:")
     for method, count in methods.items():
-        log(f', 'unknown')
-        methods[method] = methods.get(method, 0) + 1
-    
-    log("📈 Методы проверки:")
-    for method, count in methods.items():
-       "   • {method}: {count}")
-    
-    if working:
-        avg_ping = sum(w.get('ping', 0) for w in working) / len(working)
-        log(f"⚡ Средний пинг: {avg_ping:.0f}ms log(f"   • {method}: {count}")
+        log(f"   • {method}: {count}")
     
     if working:
         avg_ping = sum(w.get('ping', 0) for w in working) / len(working)
@@ -852,17 +773,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n👋 Остановка по запросу")
-    
-    log("="*60)
-    log(f"✅ Результат сохранён в {WORK_FILE}")
-    log("="*60)
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\n\n👋 Остановка по запросу пользователя пользователя")
+        print("\n\n👋 Остановка по запросу пользователя")
     except Exception as e:
         print(f"\n❌ Ошибка: {e}")
         import traceback
