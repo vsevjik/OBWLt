@@ -2014,10 +2014,7 @@ async def run_forever():
 
 if __name__ == "__main__":
     try:
-        asyncio.run(run_forever())
-    except KeyboardInterrupt:
-        print("\n👋 Программа остановлена")
+        # Запускаем один цикл и выходим, чтобы GitHub Actions завершил работу успешно
+        asyncio.run(main_cycle()) 
     except Exception as e:
-        print(f"\n❌ Критическая ошибка: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Ошибка: {e}")
