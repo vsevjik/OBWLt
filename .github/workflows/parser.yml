@@ -1,0 +1,52 @@
+name: Парсер VLESS конфигов
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Каждые 6 часов
+  workflow_dispatch:  # Ручной запуск
+
+jobs:
+  parse:
+    name: Запуск парсера
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Клонирование репозитория
+        uses: actions/checkout@v4
+      
+      - name: Установка Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Установка зависимостей
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests  # Нужно для запросов через прокси
+      
+      - name: Создание необходимых файлов (если отсутствуют)
+        run: |
+          touch sources.txt whitelist.txt
+      
+      - name: Запуск парсера
+        run: python parser.py
+        continue-on-error: true
+      
+      - name: Проверка созданных файлов
+        run: |
+          echo "=== СОДЕРЖИМОЕ ДИРЕКТОРИИ ==="
+          ls -la
+          echo "=== ПЕРВЫЕ 20 СТРОК url_work.txt (если есть) ==="
+          if [ -f url_work.txt ]; then
+            head -20 url_work.txt
+          else
+            echo "Файл url_work.txt не создан"
+          fi
+      
+      - name: Коммит результатов
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add *.txt
+          git diff --quiet && git diff --staged --quiet || git commit -m "🔄 Автообновление конфигов $(date +'%Y-%m-%d %H:%M')"
+          git push
